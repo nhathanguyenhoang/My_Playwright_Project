@@ -1,19 +1,33 @@
 # 🎭 Playwright Automation Testing
+A personal automation testing project built with **Playwright** using the **OrangeHRM demo website**.
 
-Automated test suite for **OrangeHRM** web application using **Playwright** with **Page Object Model (POM)** pattern.
+This project is used to practice and demonstrate:
+- ✅ UI automation testing
+- ✅ Page Object Model (POM)
+- ✅ Data-driven testing
+- ✅ ISTQB-style test naming
+- ✅ HTML reporting
+- ✅ GitHub Actions CI integration
+- ✅ Failure diagnostics with screenshot, video, and trace
+
 
 ---
+## 🎯 Project Objective
 
-## ✨ Features
+The main goal of this project is to automate the **OrangeHRM login feature** and improve the test framework step by step.
 
-- ✅ **Page Object Model (POM)** - Separates UI elements from test logic
-- ✅ **Data-driven Testing** - Reusable test cases with multiple data sets
-- ✅ **Comprehensive Test Cases** - Login validation with edge cases
-- ✅ **HTML Report** - Detailed test results and metrics
-- ✅ **Screenshots & Videos** - Visual evidence of test failures
+This project reflects the learning journey from:
+
+1. Basic script version  
+2. Reusable function version  
+3. Page Object Model (POM) version  
+4. Data-driven test version  
+
+The repository keeps both:
+- **stable final test files** for execution
+- **learning/practice files** to show progress
 
 ---
-
 ## 📦 Tech Stack
 
 | Technology | Version | Purpose |
@@ -23,27 +37,26 @@ Automated test suite for **OrangeHRM** web application using **Playwright** with
 | JavaScript | ES6+ | Programming language |
 
 ---
-
 ## 📁 Project Structure
-
-```
 playwright_beginer/
+├── .github/
+│   └── workflows/
+│       └── playwright.yml              # GitHub Actions workflow
 ├── pages/
-│   └── LoginPage.js                  # Page Object for login page
+│   └── LoginPage.js                    # Page Object for login page
 ├── tests/
-│   ├── Login_withPOM.spec.js         # POM pattern tests
-│   ├── Login_dataDriven.spec.js      # Data-driven tests
-│   ├── my_script.spec.js             # Basic test examples
-│   └── orangeHRM_logic_Basic.spec.js # Login logic tests
-├── playwright-report/                # HTML test reports
-├── playwright.config.js              # Playwright configuration
-├── jsconfig.json                     # JavaScript configuration
-├── package.json                      # Dependencies
-└── README.md                         # This file
-```
+│   ├── Login_withPOM.spec.js           # Stable POM-based login tests
+│   └── Login_dataDriven.spec.js        # Final scalable data-driven login tests
+├── practice/
+│   ├── login-basic-learning.js         # Earlier reusable-function learning version
+│   └── my-script-learning.js           # Basic script experiments
+├── playwright.config.js                # Playwright configuration
+├── jsconfig.json                       # JavaScript configuration
+├── package.json                        # Dependencies
+├── package-lock.json                   # Lock file
+└── README.md                           # Project documentation
 
 ---
-
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -65,7 +78,6 @@ npx playwright install
 ```
 
 ---
-
 ## ▶️ Running Tests
 
 ### Run all tests
