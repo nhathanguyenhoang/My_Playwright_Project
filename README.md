@@ -7,6 +7,7 @@ Dự án tự động kiểm thử ứng dụng **OrangeHRM** sử dụng **Play
 ## 📋 Mục lục
 
 - [Tổng quan](#tổng-quan)
+- [Features](#features)
 - [Công nghệ sử dụng](#công-nghệ-sử-dụng)
 - [Cấu trúc project](#cấu-trúc-project)
 - [Cài đặt](#cài-đặt)
@@ -26,6 +27,16 @@ Project này là một bộ test tự động cho chức năng **đăng nhập (
 - Xác minh chức năng đăng nhập hoạt động đúng
 - Kiểm thử các trường hợp hợp lệ và không hợp lệ
 - Sử dụng Page Object Model để dễ bảo trì và mở rộng
+
+---
+
+## ✨ Features
+
+- ✅ **Page Object Model (POM)** - Separates UI elements from test logic for better maintainability
+- ✅ **Data-driven Testing** - Test multiple scenarios with different data sets
+- ✅ **GitHub Actions CI** - Automated test execution on code push (optional)
+- ✅ **HTML Report** - Detailed test reports with test results and metrics
+- ✅ **Screenshot & Video on Failure** - Captures visual evidence of test failures for debugging
 
 ---
 
@@ -175,28 +186,7 @@ const loginTestData = [
 
 **Vai trò:** Đóng gói tất cả phần tử UI và hành động của trang login
 
-```javascript
-class LoginPage {
-  constructor(page) {
-    this.page = page;
-    this.username = page.locator('input[placeholder="Username"]');
-    this.password = page.locator('input[placeholder="Password"]');
-    this.loginButton = page.locator('button[type="submit"]');
-  }
 
-  async goto() {
-    await this.page.goto('https://opensource-demo.orangehrm.com/web/index.php/auth/login');
-  }
-
-  async performLogin(user, pass) {
-    await this.username.fill(user);
-    await this.password.fill(pass);
-    await this.loginButton.click();
-  }
-}
-
-module.exports = { LoginPage };
-```
 
 **Các thành phần:**
 
