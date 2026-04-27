@@ -9,10 +9,46 @@ const { LoginPage } = require('../pages/LoginPage');
 // - pass: Password to enter  
 // - expected: Expected result (success/error/required)
 const loginTestData = [
-  { name: 'valid login', user: 'Admin', pass: 'admin123', expected: 'success' },
-  { name: 'invalid password', user: 'Admin', pass: 'wrong', expected: 'error' },
-  { name: 'blank credentials', user: '', pass: '', expected: 'required' },
-  { name: 'invalid username', user: 'WrongUser', pass: 'admin123', expected: 'error' },
+  {
+    id: 'TC_LOGIN_001',
+    type: 'POSITIVE',
+    name: 'Verify login succeeds with valid credentials',
+    user: 'Admin',
+    pass: 'admin123',
+    expected: 'success',
+  },
+  {
+    id: 'TC_LOGIN_002',
+    type: 'NEGATIVE',
+    name: 'Verify error message is displayed when password is invalid',
+    user: 'Admin',
+    pass: 'wrong',
+    expected: 'error',
+  },
+  {
+    id: 'TC_LOGIN_003',
+    type: 'NEGATIVE',
+    name: 'Verify required messages are displayed when username and password are blank',
+    user: '',
+    pass: '',
+    expected: 'required',
+  },
+  {
+    id: 'TC_LOGIN_004',
+    type: 'NEGATIVE',
+    name: 'Verify error message is displayed when username is invalid',
+    user: 'WrongUser',
+    pass: 'admin123',
+    expected: 'error',
+  },
+  {
+    id: 'TC_LOGIN_005',
+    type: 'NEGATIVE',
+    name: 'Verify error message is displayed when username and password are invalid',
+    user: '!@#$%^&*()',
+    pass: '!@#$%^&*()',
+    expected: 'error',
+  },
 ];
 
 test.describe('Login Data Driven', () => {
@@ -26,7 +62,7 @@ test.describe('Login Data Driven', () => {
   });
 
   for (const data of loginTestData) {           
-    test(`Login test - ${data.name}`, async ({ page }) => {
+    test(`[${data.type}] ${data.id} - ${data.name}`, async ({ page }) => {
       // STEP 1: Check if test case is "blank credentials"
       // If yes - only click login button without entering any data
       // If no - call performLogin method with user and password from test data
