@@ -29,15 +29,16 @@ The repository keeps both:
 
 ---
 ## 📦 Tech Stack
-
+```
 | Technology | Version | Purpose |
 |-----------|---------|---------|
 | Playwright | ^1.58.2 | End-to-end test automation |
 | Node.js | v14+ | Runtime environment |
 | JavaScript | ES6+ | Programming language |
-
+```
 ---
 ## 📁 Project Structure
+```bash
 playwright_beginer/
 ├── .github/
 │   └── workflows/
@@ -55,6 +56,28 @@ playwright_beginer/
 ├── package.json                        # Dependencies
 ├── package-lock.json                   # Lock file
 └── README.md                           # Project documentation
+```
+---
+## ✅ Stable Test Coverage
+
+The final stable login scenarios include:
+
+- 🔐 Valid login with correct username and password
+- ❌ Invalid login with wrong password
+- ❌ Invalid login with wrong username
+- ⚠️ Required validation for blank username and password
+
+---
+
+## 🧪 Learning / Practice Files
+
+The `practice/` folder contains earlier learning versions, such as:
+
+- basic locator practice
+- reusable function approach
+- early script experiments
+
+These files are kept to show the learning progression, but they are **not intended to be part of the final stable CI suite**.
 
 ---
 ## 🚀 Quick Start
@@ -113,227 +136,134 @@ npx playwright show-report
 
 ---
 
-## 🧪 Test Cases
+## 🧾 Main Test Scenarios
+```bash
+Login_withPOM.spec.js
+```
+Tests implemented using the Page Object Model approach:
 
-### Login_withPOM.spec.js
-Tests using Page Object Model pattern:
+Valid login
+Invalid password
+Blank credentials
+Invalid username
+Login_dataDriven.spec.js
 
-| Test Case | Input | Expected Result |
-|-----------|-------|-----------------|
-| Valid Login | Admin / admin123 | Redirects to dashboard |
-| Invalid Password | Admin / wrongpass | Shows "Invalid credentials" error |
-| Blank Credentials | (empty) / (empty) | Shows 2 "Required" messages |
-| Invalid Username | WrongUser / admin123 | Shows "Invalid credentials" error |
-| Special Characters | !@#$%^&*() / !@#$%^&*() | Shows "Invalid credentials" error |
+---
 
-### Login_dataDriven.spec.js
-Data-driven testing with reusable logic:
+## Data-driven testing with reusable test logic and structured test data.
 
-```javascript
+Example:
+```bash
 const loginTestData = [
-  { name: 'valid login', user: 'Admin', pass: 'admin123', expected: 'success' },
-  { name: 'invalid password', user: 'Admin', pass: 'wrong', expected: 'error' },
-  { name: 'blank credentials', user: '', pass: '', expected: 'required' },
-  { name: 'invalid username', user: 'WrongUser', pass: 'admin123', expected: 'error' },
+  {
+    id: 'TC_LOGIN_001',
+    type: 'POSITIVE',
+    name: 'Verify login succeeds with valid credentials',
+    user: 'Admin',
+    pass: 'admin123',
+    expected: 'success',
+  },
+  {
+    id: 'TC_LOGIN_002',
+    type: 'NEGATIVE',
+    name: 'Verify error message is displayed when password is invalid',
+    user: 'Admin',
+    pass: 'wrong',
+    expected: 'error',
+  },
 ];
 ```
+Benefits:
 
-**Benefits:**
-- Easy to add/modify test data without changing code
-- Reusable test logic for multiple scenarios
-- Simplified test maintenance
-
----
-
-## 🏗️ Page Object Model
-
-### LoginPage.js
-
-Encapsulates all login page elements and actions:
-
-```javascript
-class LoginPage {
-  constructor(page) {
-    this.page = page;
-    this.username = page.locator('input[placeholder="Username"]');
-    this.password = page.locator('input[placeholder="Password"]');
-    this.loginButton = page.locator('button[type="submit"]');
-  }
-
-  async goto() {
-    await this.page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
-  }
-
-  async performLogin(user, pass) {
-    await this.username.fill(user);
-    await this.password.fill(pass);
-    await this.loginButton.click();
-  }
-}
-```
-
-**Methods & Properties:**
-| Item | Type | Description |
-|------|------|-------------|
-| `goto()` | Method | Navigate to login page |
-| `performLogin(user, pass)` | Method | Perform login action |
-| `username` | Locator | Username input field |
-| `password` | Locator | Password input field |
-| `loginButton` | Locator | Login button |
-
----
-
-## ✅ Best Practices
-
-### 1. Page Object Model
-- Separates UI elements from test logic
-- Easy to maintain when UI changes
-- Reusable across multiple tests
-
-### 2. Data-Driven Testing
-- Test data separated from test logic
-- Easy to add new test scenarios
-- Reduces code duplication
-
-### 3. Clear Test Names
-```javascript
-// ✅ GOOD
-test('Login with POM - invalid password');
-
-// ❌ BAD
-test('login test 2');
-```
-
-### 4. Reusable Methods
-```javascript
-// ✅ GOOD - Can be reused
-async performLogin(user, pass) {
-  await this.username.fill(user);
-  await this.password.fill(pass);
-  await this.loginButton.click();
-}
-
-// ❌ BAD - Hard-coded
-await page.locator('input[placeholder="Username"]').fill('Admin');
-```
-
-### 5. Setup & Teardown
-```javascript
-test.beforeEach(async ({ page }) => {
-  loginPage = new LoginPage(page);
-  await loginPage.goto();
-});
-```
-
----
-
-## 🔧 Configuration
-
-### playwright.config.js
-```javascript
-testDir: './tests'              // Test folder
-fullyParallel: true            // Run tests in parallel
-reporter: 'html'               // HTML report output
-timeout: 30 * 1000             // Test timeout (30s)
-trace: 'on-first-retry'        // Trace failed tests
-```
-
-### jsconfig.json
-```json
-{
-  "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
-    "allowJs": true,
-    "experimentalDecorators": true
-  }
-}
-```
-
+easy to add or update test scenarios
+reusable test logic
+simplified maintenance
+clearer test reports
 ---
 
 ## 🐛 Troubleshooting
+Error: Cannot find module
 
-### Error: "Decorators are not valid here"
-**Solution:** Ensure `jsconfig.json` has proper configuration with `experimentalDecorators: true`
+Check import paths carefully.
 
-### Error: "Cannot find module"
-**Solution:** Check import paths are correct
-```javascript
-// ✅ CORRECT
+// ✅ Correct
 const { LoginPage } = require('../pages/LoginPage');
+Error: Tests timeout
 
-// ❌ WRONG
-const { LoginPage } = require('./pages/LoginPage');
+Possible causes:
+
+unstable public demo environment
+running too many tests in parallel
+outdated practice files still included in the main suite
+Error: Browser not installed
 ```
-
-### Error: "Tests timeout"
-**Solution:** Increase timeout in `playwright.config.js`
-```javascript
-timeout: 60 * 1000, // 60 seconds
-```
-
-### Error: "Browser not installed"
-**Solution:** Install Playwright browsers
-```bash
 npx playwright install
 ```
-
 ---
 
-## 📊 View Test Reports
+## 📊 Test Reports
 
-After running tests, view detailed reports:
-
-```bash
+After running tests, you can open the HTML report:
+```
 npx playwright show-report
 ```
+The report includes:
 
-**Report includes:**
-- ✅ Number of passed tests
-- ❌ Number of failed tests
-- ⏱️ Test execution time
-- 📸 Screenshots of failures
-- 🎬 Video recordings
+✅ passed tests
+❌ failed tests
+⏱️ execution time
+📸 screenshots on failure
+🎥 videos on failure
+🧵 trace on retry
+🔄 CI/CD
 
----
+This project uses GitHub Actions to:
 
-## 🚀 Git Workflow
+install dependencies
+install Playwright browsers
+run automated tests
+upload the HTML report artifact
 
-### Stage and commit changes
-```bash
-git add .
-git commit -m "Add login test cases with POM"
-git push origin main
-```
-
-### View commit history
-```bash
-git log --oneline
-```
+This simulates a basic automated UI test execution pipeline.
 
 ---
 
-## 📦 Dependencies
+## 📚 Key Learning Outcomes
 
-```json
-{
-  "@playwright/test": "^1.58.2",
-  "@types/node": "^25.3.3"
-}
-```
+Through this project, I practiced:
 
+writing Playwright UI tests
+improving test reusability
+converting basic scripts into POM structure
+applying data-driven testing
+designing structured test names
+preparing a project for CI execution
 ---
 
-## 📝 Test Environment
+## 🔮 Future Improvement
 
-- **Test URL:** https://opensource-demo.orangehrmlive.com
-- **Test Username:** Admin
-- **Test Password:** admin123
-- **Default Browser:** Chromium
+## Planned next steps:
 
----
+add more OrangeHRM features beyond login
+create more page objects
+improve assertions and stability
+expand CI pipeline usage
+move larger test data sets into separate files
+
+## 📝 Notes
+
+This project is built mainly for learning and portfolio purposes.
+
+The focus is not only on making tests pass, but also on improving:
+
+structure
+readability
+maintainability
+automation mindset
+
+## 👩‍💻 Author
+
+Nguyen Hoang Nhat Ha
 
 ## 📚 Resources
 
