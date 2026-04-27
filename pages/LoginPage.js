@@ -5,6 +5,8 @@ class LoginPage {
     this.page = page;
     this.username = page.locator('input[placeholder="Username"]');
     this.password = page.locator('input[placeholder="Password"]');
+    this.errorMessage = page.locator('.oxd-alert-content-text');
+    this.requiredMessages = page.getByText('Required');
     this.loginButton = page.locator('button[type="submit"]');
   }
   // hàm hành động dùng chung giúp tái sử dụng code
