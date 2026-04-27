@@ -43,9 +43,10 @@ jobs:
           echo "- Commit: \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- Workflow status: **${{ job.status }}**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### What to check" >> $GITHUB_STEP_SUMMARY
-          echo "- Open the **Run Playwright login automation tests** step to see individual test cases in the log." >> $GITHUB_STEP_SUMMARY
-          echo "- Download the artifact **playwright-report** if you need the full HTML report." >> $GITHUB_STEP_SUMMARY
+          echo "### How to read this run" >> $GITHUB_STEP_SUMMARY
+          echo "- Open **Run Playwright login automation tests** to see each testcase in the log." >> $GITHUB_STEP_SUMMARY
+          echo "- Test steps are printed in the log for easier debugging." >> $GITHUB_STEP_SUMMARY
+          echo "- Download **playwright-report** only if you need the full HTML report." >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Playwright HTML report artifact
         if: always()

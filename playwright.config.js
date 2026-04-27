@@ -21,10 +21,10 @@ export default defineConfig({
   use: {
     baseURL: 'https://opensource-demo.orangehrmlive.com',
     headless: true,
-    // screenshot: 'only-on-failure',
-    // video: 'retain-on-failure',
-    screenshot: 'on',
-    video: 'on',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+    //screenshot: 'on',
+    //video: 'on',
     trace: 'on-first-retry',
   },
 });

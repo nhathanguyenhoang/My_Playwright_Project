@@ -1,13 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { LoginPage } = require('../pages/LoginPage');
 
-// Data Driven Test - Separates test data in one place
-// Benefits: Easy to manage, modify data without changing test logic
-// Each object contains:
-// - name: Test case name
-// - user: Username to enter
-// - pass: Password to enter  
-// - expected: Expected result (success/error/required)
 const loginTestData = [
   {
     id: 'TC_LOGIN_001',
@@ -54,42 +47,50 @@ const loginTestData = [
 test.describe('Login Data Driven', () => {
   let loginPage;
 
-  // STEP 0: Execute before each test case
-  // Create LoginPage instance and navigate to login page
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     await loginPage.goto();
   });
 
-  for (const data of loginTestData) {           
+  for (const data of loginTestData) {
     test(`[${data.type}] ${data.id} - ${data.name}`, async ({ page }) => {
-      // STEP 1: Check if test case is "blank credentials"
-      // If yes - only click login button without entering any data
-      // If no - call performLogin method with user and password from test data
-      if (data.expected === 'required') {
-        await loginPage.loginButton.click();
-      } else {
-        await loginPage.performLogin(data.user, data.pass);
-      }
+      await test.step('Open OrangeHRM login page', async () => {
+        await loginPage.goto();
+      });
 
-      // STEP 2: Define assertions for each test scenario
-      const assertions = {
-        // If login successful - verify URL contains "dashboard"
-        success: async () => {
-          await expect(page).toHaveURL(/dashboard/);
-        },
-        // If login failed - verify "Invalid credentials" error message appears
-        error: async () => {
-          await expect(loginPage.errorMessage).toHaveText('Invalid credentials');
-        },
-        // If blank credentials - verify 2 "Required" messages appear
-        required: async () => {
-          await expect(loginPage.requiredMessages).toHaveCount(2);
-        },
-      };
+      await test.step('Perform login action', async () => {
+        if (data.expected === 'required') {
+          // For blank credentials test: just click login button without entering data
+          await loginPage.loginButton.click();
+        } else {
+          // For other tests: enter credentials and click login
+          await loginPage.performLogin(data.user, data.pass);
+        }
+      });
 
-      // STEP 3: Execute corresponding assertion based on expected result from test data
-      await assertions[data.expected]();
+      await test.step('Verify expected result', async () => {
+        const assertions = {
+          // SUCCESS ASSERTION: Verify successful login by checking URL
+          // After successful login, user should be redirected to dashboard page
+          success: async () => {
+            await expect(page).toHaveURL(/dashboard/);
+          },
+
+          // ERROR ASSERTION: Verify error message for invalid credentials
+          // When login fails, an error message should be displayed
+          error: async () => {
+            await expect(loginPage.errorMessage).toHaveText('Invalid credentials');
+          },
+
+          // REQUIRED ASSERTION: Verify validation messages for blank fields
+          // When fields are empty, "Required" messages should appear for both fields
+          required: async () => {
+            await expect(loginPage.requiredMessages).toHaveCount(2);
+          },
+        };
+
+        await assertions[data.expected]();
+      });
     });
   }
 });
