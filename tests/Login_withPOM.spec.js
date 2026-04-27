@@ -19,7 +19,7 @@ test ( 'Login with POM - invalid password', async ({ page }) => {
 });
 
 test ( 'Login with POM - blank credentials', async ({ page }) => {
-    // Riêng trường hợp này, ta chỉ cần click mà không điền gì
+    // For this case, only click login button without entering credentials
     await loginPage.loginButton.click();
     await expect(loginPage.requiredMessages).toHaveCount(2);
 });

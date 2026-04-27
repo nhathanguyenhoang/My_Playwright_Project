@@ -8,7 +8,7 @@ let loginPage;
     test.beforeEach(async ({ page }) => {
         await page.goto(BASE_URL + '/web/index.php/auth/login');
         
-        // Khởi tạo các phần tử
+        // Initialize all page elements
        loginPage = {
             userInput: page.locator('input[placeholder="Username"]'),
             passInput: page.locator('input[placeholder="Password"]'),
@@ -16,7 +16,7 @@ let loginPage;
         };
     });
 
-    // Hàm hành động dùng chung giúp tái sử dụng code
+    // Reusable action method to reduce code duplication
     async function performLogin(user, pass) {
         await loginPage.userInput.fill(user);
         await loginPage.passInput.fill(pass);
@@ -24,7 +24,7 @@ let loginPage;
     }
 
     test('TC001 - Login successfully with valid credentials', async ({ page }) => {
-       // Gọi hàm thay vì viết lại 3 dòng fill/click
+       // Call the reusable function instead of rewriting the 3 lines of fill/click
         await performLogin('Admin', 'admin123');
         await expect(page).toHaveURL(/.*dashboard/);
 
@@ -37,7 +37,7 @@ let loginPage;
     });
     
     test('TC003 - Show required messages when username and password are blank', async ({ page }) => {
-     // Riêng trường hợp này, ta chỉ cần click mà không điền gì
+     // For this case, only click login button without entering any credentials
         await loginPage.loginButton.click();
         const requiredMessages = page.getByText('Required');
         await expect(requiredMessages).toHaveCount(2);

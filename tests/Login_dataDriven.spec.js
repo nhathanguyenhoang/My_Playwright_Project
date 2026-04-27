@@ -1,13 +1,13 @@
 const { test, expect } = require('@playwright/test');
 const { LoginPage } = require('../pages/LoginPage');
 
-// Data Driven Test - Tách dữ liệu test ra một chỗ
-// Lợi ích: Dễ quản lý, thay đổi dữ liệu mà không cần sửa code test
-// Mỗi object chứa:
-// - name: Tên của test case
-// - user: Username để nhập
-// - pass: Password để nhập  
-// - expected: Kết quả mong đợi (success/error/required)
+// Data Driven Test - Separates test data in one place
+// Benefits: Easy to manage, modify data without changing test logic
+// Each object contains:
+// - name: Test case name
+// - user: Username to enter
+// - pass: Password to enter  
+// - expected: Expected result (success/error/required)
 const loginTestData = [
   { name: 'valid login', user: 'Admin', pass: 'admin123', expected: 'success' },
   { name: 'invalid password', user: 'Admin', pass: 'wrong', expected: 'error' },
@@ -18,8 +18,8 @@ const loginTestData = [
 test.describe('Login Data Driven', () => {
   let loginPage;
 
-  // STEP 0: Chạy trước mỗi test case
-  // Tạo instance LoginPage và navigate đến trang login
+  // STEP 0: Execute before each test case
+  // Create LoginPage instance and navigate to login page
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
     await loginPage.goto();
@@ -27,32 +27,32 @@ test.describe('Login Data Driven', () => {
 
   for (const data of loginTestData) {           
     test(`Login test - ${data.name}`, async ({ page }) => {
-      // STEP 1: Kiểm tra nếu test case là "blank credentials"
-      // Nếu có - chỉ click login button mà không điền gì
-      // Nếu không - gọi method performLogin với user và password từ test data
+      // STEP 1: Check if test case is "blank credentials"
+      // If yes - only click login button without entering any data
+      // If no - call performLogin method with user and password from test data
       if (data.expected === 'required') {
         await loginPage.loginButton.click();
       } else {
         await loginPage.performLogin(data.user, data.pass);
       }
 
-      // STEP 2: Định nghĩa các assertions dùng cho từng trường hợp test
+      // STEP 2: Define assertions for each test scenario
       const assertions = {
-        // Nếu login thành công - kiểm tra URL có chứa "dashboard"
+        // If login successful - verify URL contains "dashboard"
         success: async () => {
           await expect(page).toHaveURL(/dashboard/);
         },
-        // Nếu login thất bại - kiểm tra message lỗi "Invalid credentials" xuất hiện
+        // If login failed - verify "Invalid credentials" error message appears
         error: async () => {
           await expect(loginPage.errorMessage).toHaveText('Invalid credentials');
         },
-        // Nếu để trống - kiểm tra 2 thông báo "Required" xuất hiện
+        // If blank credentials - verify 2 "Required" messages appear
         required: async () => {
           await expect(loginPage.requiredMessages).toHaveCount(2);
         },
       };
 
-      // STEP 3: Gọi assertion tương ứng dựa vào expected result từ test data
+      // STEP 3: Execute corresponding assertion based on expected result from test data
       await assertions[data.expected]();
     });
   }

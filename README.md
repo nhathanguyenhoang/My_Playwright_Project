@@ -1,158 +1,400 @@
-# Playwright Automation Testing Project
+# 🎭 Playwright Automation Testing
 
-## Overview
-Automated test suite for OrangeHRM web application using Playwright with Page Object Model (POM) architecture.
+Dự án tự động kiểm thử ứng dụng **OrangeHRM** sử dụng **Playwright** với kiến trúc **Page Object Model (POM)**.
 
-## Tech Stack
-- **Playwright** (JavaScript)
-- **Page Object Model (POM)** - Best practice for test automation
-- **Node.js** - Runtime environment
-- **GitHub Actions** - CI/CD pipeline
+---
 
-## Project Structure
+## 📋 Mục lục
+
+- [Tổng quan](#tổng-quan)
+- [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+- [Cấu trúc project](#cấu-trúc-project)
+- [Cài đặt](#cài-đặt)
+- [Chạy tests](#chạy-tests)
+- [Các test case](#các-test-case)
+- [Page Object Model](#page-object-model)
+- [Các best practices](#các-best-practices)
+- [Troubleshooting](#troubleshooting)
+
+---
+
+## 📖 Tổng quan
+
+Project này là một bộ test tự động cho chức năng **đăng nhập (Login)** của ứng dụng OrangeHRM.
+
+**Mục tiêu:**
+- Xác minh chức năng đăng nhập hoạt động đúng
+- Kiểm thử các trường hợp hợp lệ và không hợp lệ
+- Sử dụng Page Object Model để dễ bảo trì và mở rộng
+
+---
+
+## 🛠️ Công nghệ sử dụng
+
+| Công nghệ | Phiên bản | Mục đích |
+|-----------|----------|---------|
+| **Playwright** | ^1.58.2 | Framework test tự động |
+| **Node.js** | v14+ | Runtime environment |
+| **JavaScript** | ES6+ | Ngôn ngữ lập trình |
+| **Page Object Model** | - | Design pattern cho test |
+
+---
+
+## 📁 Cấu trúc project
 
 ```
 playwright_beginer/
-├── pages/                    # Page Object Model classes
-│   └── LoginPage.js         # Login page POM
-├── tests/                   # Test specifications
-│   ├── Login_withPOM.spec.js       # Login tests with POM
-│   ├── my_script.spec.js           # First tests
-│   └── orangeHRM_logic_Basic.spec.js # Basic logic tests for Login Function
-├── playwright-report/       # HTML test reports
-├── test-results/           # Test results artifacts
-├── playwright.config.js    # Playwright configuration
-├── package.json           # Project dependencies
-├── jsconfig.json         # JavaScript configuration
-└── README.md            # Project documentation
+│
+├── pages/
+│   └── LoginPage.js                          # Page Object cho trang login
+│
+├── tests/
+│   ├── Login_withPOM.spec.js                 # Các test case sử dụng POM pattern
+│   ├── Login_dataDriven.spec.js              # Test case sử dụng data-driven
+│   ├── my_script.spec.js                     # Script test đầu tiên
+│   └── orangeHRM_logic_Basic.spec.js         # Test logic cơ bản
+│
+├── playwright-report/                        # HTML test reports (tự động tạo)
+├── test-results/                             # Test results artifacts
+│
+├── playwright.config.js                      # Cấu hình Playwright
+├── jsconfig.json                             # Cấu hình JavaScript
+├── package.json                              # Dependency & scripts
+├── README.md                                 # Tài liệu này
 ```
 
-## Installation
+---
 
-### Prerequisites
-- Node.js (v14 or higher)
-- npm or yarn
+## 💻 Cài đặt
 
-### Setup
+### Yêu cầu
+- **Node.js** v14 trở lên ([Download](https://nodejs.org))
+- **npm** hoặc **yarn** (tự động cài với Node.js)
+
+### Các bước cài đặt
+
 ```bash
-# Install dependencies
+# 1. Clone project (nếu từ GitHub)
+git clone <repository-url>
+cd playwright_beginer
+
+# 2. Cài đặt dependencies
 npm install
 
-# Install Playwright browsers
+# 3. Cài đặt Playwright browsers
 npx playwright install
 ```
 
-## Test Cases
+**Xác nhận cài đặt:**
+```bash
+npx playwright --version
+```
 
-### Login Tests (Login_withPOM.spec.js)
-- ✅ Valid login with correct credentials
-- ✅ Invalid login with wrong password
-- ✅ Blank credentials validation
-- ✅ Invalid username handling
-- ✅ Special characters in credentials
+---
 
-## Running Tests
+## ▶️ Chạy tests
 
-### Run all tests
+### 1. Chạy tất cả tests
 ```bash
 npm test
 ```
 
-### Run specific test file
+### 2. Chạy file test cụ thể
 ```bash
+# Test với POM pattern
 npx playwright test tests/Login_withPOM.spec.js
+
+# Test Data-Driven
+npx playwright test tests/Login_dataDriven.spec.js
 ```
 
-### Run tests in debug mode
+### 3. Chạy tests ở chế độ Headed (hiển thị browser)
+```bash
+npx playwright test tests/Login_withPOM.spec.js --headed
+```
+
+### 4. Chạy tests ở chế độ Debug
 ```bash
 npx playwright test --debug
 ```
 
-### View test report
+### 5. Xem test report
 ```bash
 npx playwright show-report
 ```
 
-## Page Object Model (POM)
-
-### LoginPage.js
-Encapsulates all login page elements and actions:
-
-```javascript
-- goto()                    // Navigate to login page
-- performLogin(user, pass)  // Perform login action
-- username                  // Username input locator
-- password                  // Password input locator
-- loginButton              // Login button locator
+### 6. Chạy 1 test case cụ thể
+```bash
+npx playwright test -g "Login with POM"
 ```
 
-## Configuration
+**Legend:**
+- `-g` = grep pattern (tìm test theo tên)
+- `--headed` = hiển thị browser (mặc định là headless)
+- `--debug` = chế độ debug từng bước
 
-### Browser Support
-- Chromium (default)
-- Firefox (commented)
-- WebKit (commented)
+---
 
-### Reporter
-- HTML reporter for detailed test results
+## 🧪 Các test case
 
-## Best Practices Used
+### Login_withPOM.spec.js
 
-✅ **Page Object Model** - Maintains elements and methods in separate classes  
-✅ **Reusable Methods** - Reduces code duplication  
-✅ **Clear Test Names** - Descriptive test case names  
-✅ **Proper Waits** - Implicit waits via Playwright's smart locators  
+Sử dụng **Page Object Model Pattern**:
 
-## Git Workflow
+| Test Case | Input | Expected Result |
+|-----------|-------|-----------------|
+| ✅ Valid Login | Admin / admin123 | Redirect to dashboard |
+| ❌ Invalid Password | Admin / wrongpass | Error: "Invalid credentials" |
+| ⚠️ Blank Credentials | (empty) / (empty) | 2 Required messages |
+| ❌ Invalid Username | WrongUser / admin123 | Error: "Invalid credentials" |
+| 🔒 Special Characters | !@#$%^&*() / !@#$%^&*() | Error: "Invalid credentials" |
+
+### Login_dataDriven.spec.js
+
+Sử dụng **Data-Driven Testing Pattern**:
+
+```javascript
+const loginTestData = [
+  { name: 'valid login', user: 'Admin', pass: 'admin123', expected: 'success' },
+  { name: 'invalid password', user: 'Admin', pass: 'wrong', expected: 'error' },
+  { name: 'blank credentials', user: '', pass: '', expected: 'required' },
+  { name: 'invalid username', user: 'WrongUser', pass: 'admin123', expected: 'error' },
+];
+```
+
+**Lợi ích Data-Driven:**
+- ✅ Dễ thêm/sửa test data mà không cần sửa code
+- ✅ Tái sử dụng logic test cho nhiều data set
+- ✅ Dễ quản lý test case
+
+---
+
+## 🏗️ Page Object Model
+
+### LoginPage.js
+
+**Vai trò:** Đóng gói tất cả phần tử UI và hành động của trang login
+
+```javascript
+class LoginPage {
+  constructor(page) {
+    this.page = page;
+    this.username = page.locator('input[placeholder="Username"]');
+    this.password = page.locator('input[placeholder="Password"]');
+    this.loginButton = page.locator('button[type="submit"]');
+  }
+
+  async goto() {
+    await this.page.goto('https://opensource-demo.orangehrm.com/web/index.php/auth/login');
+  }
+
+  async performLogin(user, pass) {
+    await this.username.fill(user);
+    await this.password.fill(pass);
+    await this.loginButton.click();
+  }
+}
+
+module.exports = { LoginPage };
+```
+
+**Các thành phần:**
+
+| Thành phần | Loại | Mô tả |
+|-----------|------|-------|
+| `goto()` | Method | Navigate tới trang login |
+| `performLogin(user, pass)` | Method | Nhập credentials & click login |
+| `username` | Locator | Input field username |
+| `password` | Locator | Input field password |
+| `loginButton` | Locator | Button login |
+
+---
+
+## ✅ Các best practices
+
+### 1. **Page Object Model (POM)**
+- Tách biệt UI elements từ test logic
+- Dễ maintain khi UI thay đổi
+- Tái sử dụng code
+
+### 2. **Data-Driven Testing**
+- Test data tách biệt khỏi logic
+- Dễ thêm/sửa test case mới
+- Giảm code duplication
+
+### 3. **Clear Test Names**
+```javascript
+// ✅ GOOD
+test('Login with POM - invalid password');
+
+// ❌ BAD
+test('login test 2');
+```
+
+### 4. **Reusable Methods**
+```javascript
+// ✅ GOOD - Có thể tái sử dụng
+async performLogin(user, pass) {
+  await this.username.fill(user);
+  await this.password.fill(pass);
+  await this.loginButton.click();
+}
+
+// ❌ BAD - Hard-coded
+await page.locator('input[placeholder="Username"]').fill('Admin');
+```
+
+### 5. **beforeEach Setup**
+```javascript
+test.beforeEach(async ({ page }) => {
+  loginPage = new LoginPage(page);
+  await loginPage.goto();
+});
+```
+
+---
+
+## 🔧 Cấu hình
+
+### playwright.config.js
+
+```javascript
+- testDir: './tests'              # Folder chứa tests
+- fullyParallel: true            # Chạy tests song song
+- reporter: 'html'               # HTML report
+- trace: 'on-first-retry'        # Trace failed tests
+```
+
+### jsconfig.json
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "lib": ["ES2020"],
+    "allowJs": true,
+    "experimentalDecorators": true
+  }
+}
+```
+
+---
+
+## ❓ Troubleshooting
+
+### ⚠️ Lỗi: "Decorators are not valid here"
+
+**Nguyên nhân:** Cấu hình JavaScript/TypeScript không đúng
+
+**Giải pháp:**
+```json
+// jsconfig.json
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
+```
+
+### ⚠️ Lỗi: "Cannot find module"
+
+**Nguyên nhân:** Đường dẫn import sai
+
+**Giải pháp:**
+```javascript
+// ✅ ĐÚNG
+const { LoginPage } = require('../pages/LoginPage');
+
+// ❌ SAI
+const { LoginPage } = require('./pages/LoginPage');
+```
+
+### ⚠️ Lỗi: "Tests timeout"
+
+**Giải pháp:** Tăng timeout trong `playwright.config.js`
+```javascript
+timeout: 30 * 1000, // 30 giây
+```
+
+### ⚠️ Lỗi: "Browser not installed"
+
+**Giải pháp:**
+```bash
+npx playwright install
+```
+
+---
+
+## 📊 Xem test report
+
+Sau khi chạy tests, xem chi tiết report:
+
+```bash
+npx playwright show-report
+```
+
+Report sẽ hiển thị:
+- ✅ Số test passed
+- ❌ Số test failed
+- ⏱️ Thời gian chạy
+- 📸 Screenshots của failed tests
+- 🎬 Video recordings
+
+---
+
+## 🚀 Git Workflow
 
 ### Commit changes
 ```bash
 git add .
-git commit -m "Your commit message"
+git commit -m "Add login test cases with POM"
 git push origin main
 ```
 
-### View commits
+### View history
 ```bash
 git log --oneline
 ```
 
-## Troubleshooting
+---
 
-### Issue: "Decorators are not valid here"
-**Solution:** Ensure `jsconfig.json` has proper configuration with `experimentalDecorators: true`
-
-### Issue: Cannot find module
-**Solution:** Check relative paths in require statements
-```javascript
-// Correct
-const { LoginPage } = require('../pages/LoginPage');
-```
-
-### Issue: Tests timeout
-**Solution:** Increase timeout in `playwright.config.js`:
-```javascript
-timeout: 30 * 1000, // 30 seconds
-```
-
-## Dependencies
+## 📦 Dependencies
 
 ```json
 {
-  "@playwright/test": "^1.58.2",
-  "@types/node": "^25.3.3"
+  "@playwright/test": "^1.58.2",    // Test framework
+  "@types/node": "^25.3.3"          // TypeScript types
 }
 ```
 
-## Future Enhancements
+---
 
-- [ ] Add more test cases
-- [ ] Implement parallel execution
-- [ ] Add performance metrics
-- [ ] Setup GitHub Actions CI/CD
-- [ ] Add screenshots for failed tests
-- [ ] Database validation tests
+## 📝 Ghi chú
 
-## Author
-Ha Nguyen Hoang Nhat
+- **URL Test:** https://opensource-demo.orangehrm.com
+- **Test User:** Admin
+- **Test Password:** admin123
+- **Browser mặc định:** Chromium (có thể bật Firefox/WebKit)
+
+---
+
+## 🎓 Tài liệu tham khảo
+
+- [Playwright Docs](https://playwright.dev)
+- [Page Object Model Pattern](https://www.saucedlabs.com/blog/page-object-model)
+- [Playwright Best Practices](https://playwright.dev/docs/best-practices)
+
+---
+
+## ✨ Cảm ơn!
+
+Project này được tạo để học tập và thực hành automation testing với Playwright.
+
+**Last Updated:** 27 tháng 4, 2026
+
+---
+
+**Happy Testing! 🚀**
 
