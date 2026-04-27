@@ -9,19 +9,10 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
-
-    outputs:
-      pages_url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout source code
@@ -40,7 +31,6 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright login automation tests
-        id: playwright
         run: npx playwright test
 
       - name: Add CI summary
@@ -55,8 +45,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### What to check" >> $GITHUB_STEP_SUMMARY
           echo "- Open the **Run Playwright login automation tests** step to see individual test cases in the log." >> $GITHUB_STEP_SUMMARY
-          echo "- Open the GitHub Pages report link after deployment finishes." >> $GITHUB_STEP_SUMMARY
-          echo "- If needed, download the artifact as backup." >> $GITHUB_STEP_SUMMARY
+          echo "- Download the artifact **playwright-report** if you need the full HTML report." >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Playwright HTML report artifact
         if: always()
@@ -65,26 +54,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
-
-      - name: Configure GitHub Pages
-        if: always()
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        if: always()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: playwright-report
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        if: always()
-        uses: actions/deploy-pages@v4
-
-      - name: Add report link to summary
-        if: always()
-        run: |
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Report Links" >> $GITHUB_STEP_SUMMARY
-          echo "- GitHub Pages report: ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
-          echo "- Artifact backup: **playwright-report**" >> $GITHUB_STEP_SUMMARY
